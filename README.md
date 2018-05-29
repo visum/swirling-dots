@@ -1,6 +1,8 @@
 # swirling-dots
 A pretty number visualizer inspired by this [Numberphile video](https://www.youtube.com/watch?v=sj8Sg8qnjOg).
 
+See it in action here: [https://visum.github.io/swirling-dots/](https://visum.github.io/swirling-dots/)
+
 ## How it works
 The app draws a few hundred dots radiating from the center of the page. Each time a new dot is drawn, it is rotated around the center by the amount in the "Turns per dot" field.
 
