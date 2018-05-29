@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Swirling dots</title>
+  <style>
+    html,
+    body {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      position: relative;
+    }
+
+    #controls-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #controls-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    #canvas-container {
+      display: flex;
+      align-content: center;
+      justify-content: center;
+    }
+
+    .short-input {
+      width: 60px;
+    }
+
+    .controls {
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="canvas-container">
+    <canvas width="800" height="800" id="canvas"></canvas>
+  </div>
+  <div id="controls-right" class="controls">
+    <section>
+      Rate: 
+      <input type="number" id="rate" value="0.00001" /><br />
+      <button id="start">Start Animation</button>
+      <button id="stop" disabled>Stop Animation</button>
+      <br />
+      <label>Tails:
+        <input type="checkbox" id="tails" />
+      </label>
+    </section>
+    <section>
+      Zoom:
+      <span id="multiplerOutput">1.0</span>
+      <input type="range" id="radiusMultiplier" value="1.0" min="0" max="5" step="0.01" />
+    </section>
+  </div>
+  <div id="controls-left" class="controls">
+    <section>
+      Fraction: 
+      <input type="number" id="numerator" class="short-input" />/
+      <input type="number" id="denominator" class="short-input" />
+      <button id="calcFraction">Use ↓</button>
+      <br />
+      <input type="number" id="offset" value="0.11" />
+      <button id="draw">Draw!</button>
+      <button id="clear">Clear</button>
+    </section>
+    <section>
+      Presets: 
+      <button id="rootTwo">Sqrt(2)</button>
+      <button id="pi">1/Pi</button>
+      <button id="golden">Golden Ratio</button>
+    </section>
+  </div>
+  <script src="index.js"></script>
+</body>
+
+</html>
