@@ -1,10 +1,16 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-const ratioStep = x => 1 + 1 / x;
+const dots = 500;
+const radiusMultiplier = 1.3;
 
 let animating = false;
 
+// Not used now, but can be used to approach the golden ratio:
+// let ratio = ratioStep(ratioStep(ratioStep(ratioStep(1))));
+const ratioStep = x => 1 + 1 / x;
+
+// Gather input references
 const inputs = {};
 [
   "offset",
@@ -26,8 +32,23 @@ const inputs = {};
   inputs[key] = document.querySelector("#" + key);
 });
 
-const dots = 500;
-const radiusMultiplier = 1.3;
+
+/**
+ * Things that do things
+ */
+
+const init = function() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  update();
+  requestAnimationFrame(tick);
+}
+
+const update = function() {
+  const arcMultiplier = parseFloat(inputs.offset.value);
+  const radiusMultiplier = parseFloat(inputs.radiusMultiplier.value);
+  draw(arcMultiplier, radiusMultiplier);
+};
 
 const draw = function(arcMultiplier, radiusMultiplier) {
   if (inputs.tails.checked) {
@@ -40,7 +61,7 @@ const draw = function(arcMultiplier, radiusMultiplier) {
 
   for (var i = 0; i < dots; i++) {
     const blue = 255 * (i / dots);
-    ctx.fillStyle = `rgba(0,0,${blue})`;
+    ctx.fillStyle = `rgb(0,0,${blue})`;
     const radius = i * radiusMultiplier;
     const arc = i * arcMultiplier * 2 * Math.PI;
     const x = Math.sin(arc) * radius + canvas.width / 2;
@@ -57,10 +78,24 @@ const clear = function() {
   ctx.fill();
 };
 
+const tick = function() {
+  if (animating) {
+    const rate = parseFloat(inputs.rate.value);
+    const newOffset =
+      Math.floor((parseFloat(inputs.offset.value) + rate) * 10000000) /
+      10000000;
+    inputs.offset.value = newOffset;
+    update();
+  }
+  requestAnimationFrame(tick);
+};
+
+/**
+ * Event listeners
+ */
+
 inputs.draw.addEventListener("click", () => {
-  const radiusMultiplier = parseFloat(inputs.radiusMultiplier.value);
-  const arcMultiplier = parseFloat(inputs.offset.value);
-  draw(arcMultiplier, radiusMultiplier);
+  update();
 });
 
 inputs.start.addEventListener("click", () => {
@@ -94,31 +129,21 @@ inputs.golden.addEventListener("click", () => {
 inputs.calcFraction.addEventListener("click", () => {
   inputs.offset.value =
     parseFloat(inputs.numerator.value) / parseFloat(inputs.denominator.value);
+    update();
+});
+
+inputs.radiusMultiplier.addEventListener("input", event => {
+  inputs.multiplerOutput.textContent = event.target.value;
+  update();
 });
 
 window.addEventListener("resize", event => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  inputs.draw.dispatchEvent(new Event("click"));
+  update();
 });
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-inputs.draw.dispatchEvent(new Event("click"));
-
-const tick = () => {
-  const radiusMultiplier = parseFloat(inputs.radiusMultiplier.value);
-  inputs.multiplerOutput.textContent = radiusMultiplier;
-  if (animating) {
-    const rate = parseFloat(inputs.rate.value);
-    const newOffset =
-      Math.floor((parseFloat(inputs.offset.value) + rate) * 10000000) /
-      10000000;
-    inputs.offset.value = newOffset;
-    draw(newOffset, radiusMultiplier);
-  }
-  requestAnimationFrame(tick);
-};
-
-requestAnimationFrame(tick);
+/**
+ * Get this party started!
+ */
+init();
